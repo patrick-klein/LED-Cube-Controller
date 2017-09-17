@@ -30,7 +30,7 @@ bool frameArray[8][8][8];
 void display_handler (int signum)
 {
 
-	pin_low (HEADER, Z_CLK_PIN);			/* drive clock low */
+	pin_low (HEADER, Z_CLK_PIN);				/* drive clock low */
 	if (z<7) {
 		pin_low (HEADER, Z_DATA_PIN);			/* shift 0 into register */
 		z++;									/* increment z */
@@ -38,21 +38,21 @@ void display_handler (int signum)
 		pin_high (HEADER, Z_DATA_PIN);			/* shift 1 into register */
 		z = 0;									/* reset z to 0 */
 	}
-	pin_high (HEADER, Z_CLK_PIN);			/* transition clock */
+	pin_high (HEADER, Z_CLK_PIN);				/* transition clock */
 
 	int x, y;
 
    	/* shift in data across y dim */
-   	for (y=0;y<8;y++) {				/* cycle across y dim */
+   	for (y=0;y<8;y++) {							/* cycle across y dim */
        	pin_low (HEADER, Y_CLK_PIN);			/* ensure Y_CLK is driven low */
-       	for (x=0;x<8;x++) {					/* cycle through x dim */
-       		if (frameArray[x][y][z]) {				/* load 1's complement onto pins */
+       	for (x=0;x<8;x++) {						/* cycle through x dim */
+       		if (frameArray[x][y][z]) {			/* load 1's complement onto pins */
        			pin_low (HEADER, getPin(x));
        		} else {
        			pin_high (HEADER, getPin(x));
        		}
 		}
-       	pin_high (HEADER, Y_CLK_PIN);		/* transition clock to move data into place */
+       	pin_high (HEADER, Y_CLK_PIN);			/* transition clock to move data into place */
 	}
 }
 
@@ -81,6 +81,7 @@ int getPin (const int pin)
 
 /******************************************************************************
  * timerSetup
+ * 	(not all my code--need to find source and give credit)
  ******************************************************************************/
 
 void timerSetup (void (*fcn_pntr)(int), const int period)
@@ -161,7 +162,7 @@ void main (int argc, char** argv)
 
 	/* create struct for generateLife */
 	lifeStruct ls;
-	ls.td_fps =6;
+	ls.td_fps = 6;
 	ls.hist_fps = 12;
 	ls.init = TRUE;
 	ls.rule = RULE_1;						/* 0, 1 */
@@ -171,13 +172,14 @@ void main (int argc, char** argv)
 	/* create struct for raindrops */
 	rainStruct rs;
 	rs.fps = 12;
-	rs.chance = (int) (100/64*2);
+	rs.chance = (int) (100/64*4);
 	rs.memory = FALSE;
 
     /* create struct for edgeLight */
     edgeStruct es;
 	es.fps = 8;
 	es.stat = FALSE;		/* incompatible with cycleMode? */
+	es.mode = 2;
 	es.init = TRUE;
     es.cycleMode = TRUE;     /* following two variables only needed if cycleMode */
     es.numCount = 1;
@@ -185,7 +187,7 @@ void main (int argc, char** argv)
 
     /* create struct for movingPlanes */
     planeStruct ps;
-	ps.fps = 8;
+	ps.fps = 1;
     ps.init = TRUE;
 	ps.rand = TRUE;
 
@@ -200,7 +202,7 @@ void main (int argc, char** argv)
 
 	/* set demo clock */
 	clock_t demoTime = clock();
-	float demoPeriod = 15;		/* seconds */
+	float demoPeriod = 60;		/* seconds */
 
 	/* clear clean flag */
 	bool clean = FALSE;
@@ -219,7 +221,7 @@ void main (int argc, char** argv)
 						//ps.init = TRUE;
 						//framePeriod = 1/ps.fps;
 					}
-					mode = (mode+1)%6;
+					mode = (mode+1)%4;
 					ls.init = bs.init = es.init = ps.init = TRUE;	/* wow, it actually works */
 					demoTime = clock();
 				}
@@ -241,20 +243,24 @@ void main (int argc, char** argv)
 						randomToggle (&rnds);
 						break;
 					case 2:
-                	    framePeriod = 1/ls.hist_fps;
-						generateLifeHistory (&ls);
-						break;
-					case 3:
             	        framePeriod = 1/rs.fps;
 						raindrops (&rs);
 						break;
+					case 3:
+                    	framePeriod = 1/es.fps;
+						edgeLight (&es);
+						break;
 					case 4:
+                	    framePeriod = 1/ls.hist_fps;
+						generateLifeHistory (&ls);
+						break;
+					case 5:
                 	    framePeriod = 1/ls.td_fps;
 						generateLife3D (&ls);
 						break;
-					case 5:
-                    	framePeriod = 1/es.fps;
-						edgeLight (&es);
+					case 6:
+						framePeriod = 1/ps.fps;
+						movingPlane(&ps);
 						break;
 				}
 			}

@@ -14,7 +14,7 @@
  * macro definitions
  ******************************************************************************/
 
-#define REFRESH_RATE	400.0
+#define REFRESH_RATE	288.0
 #define FPS				12.0
 
 #define POS_X 0
