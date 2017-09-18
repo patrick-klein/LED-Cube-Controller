@@ -28,20 +28,20 @@
 #define NEG 1
 
 /* find good pins */
-#define HEADER          8       /* might possibly need both headers */
-#define X_DATA_PIN_0    14
-#define X_DATA_PIN_1    15
-#define X_DATA_PIN_2    16
-#define X_DATA_PIN_3	17
-#define X_DATA_PIN_4    18
-#define X_DATA_PIN_5    19
+#define HEADER        8       /* might possibly need both headers */
+#define X_DATA_PIN_0  14
+#define X_DATA_PIN_1  15
+#define X_DATA_PIN_2  16
+#define X_DATA_PIN_3  17
+#define X_DATA_PIN_4  18
+#define X_DATA_PIN_5  19
 
-#define X_DATA_PIN_6    20
-#define X_DATA_PIN_7    20
+#define X_DATA_PIN_6  20
+#define X_DATA_PIN_7  20
 
-#define Y_CLK_PIN       11
-#define Z_CLK_PIN       12
-#define Z_DATA_PIN      13
+#define Y_CLK_PIN     11
+#define Z_CLK_PIN     12
+#define Z_DATA_PIN    13
 
 // pwr 5,6
 
@@ -55,7 +55,7 @@
 //	17
 //	18
 //	19
-//	
+//
 
 #define TRUE	1
 #define FALSE	0
