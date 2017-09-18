@@ -65,9 +65,7 @@ void movingPlane (planeStruct* ps)
 			for(z=0;z<8;z++){
 				for(y=0;y<8;y++){
 					frameArray[val][y][z]=ON;
-					if(val>0){
-						frameArray[val-1][y][z]=OFF;
-					}
+					if(val>0){ frameArray[val-1][y][z]=OFF; }
 				}
 			}
 			break;
@@ -75,19 +73,15 @@ void movingPlane (planeStruct* ps)
 			for(z=0;z<8;z++){
 				for(y=0;y<8;y++){
 					frameArray[3-val][y][z]=ON;
-					if(val>0){
-						frameArray[3-(val-1)][y][z]=OFF;
-					}
+					if(val>0){ frameArray[3-(val-1)][y][z]=OFF; }
 				}
 			}
 			break;
 		case POS_Y:
-            for(z=0;z<8;z++){
+      for(z=0;z<8;z++){
 				for(x=0;x<4;x++){
 					frameArray[x][val][z]=ON;
-					if(val>0){
-						frameArray[x][val-1][z]=OFF;
-					}
+					if(val>0){ frameArray[x][val-1][z]=OFF; }
 				}
 			}
 			break;
@@ -95,32 +89,26 @@ void movingPlane (planeStruct* ps)
 			for(z=0;z<8;z++){
 				for(x=0;x<4;x++){
 					frameArray[x][7-val][z]=ON;
-					if(val>0){
-						frameArray[x][7-(val-1)][z]=OFF;
-					}
+					if(val>0){ frameArray[x][7-(val-1)][z]=OFF; }
 				}
 			}
 			break;
 		case POS_Z:
-            for(y=0;y<8;y++){
-				for(x=0;x<4;x++){
+      for(y=0;y<8;y++){
+        for(x=0;x<4;x++){
 					frameArray[x][y][val]=ON;
-					if(val>0){
-						frameArray[x][y][val-1]=OFF;
-					}
+					if(val>0){ frameArray[x][y][val-1]=OFF; }
 				}
 			}
 			break;
 		case NEG_Z:
-            for(y=0;y<8;y++){
-				for(x=0;x<4;x++){
-					frameArray[x][y][7-val]=ON;
-					if(val>0){
-						frameArray[x][y][7-(val-1)]=OFF;
-					}
-				}
-			}
-			break;
+      for(y=0;y<8;y++){
+        for(x=0;x<4;x++){
+          frameArray[x][y][7-val]=ON;
+          if(val>0){ frameArray[x][y][7-(val-1)]=OFF; }
+        }
+      }
+      break;
 	}
 
 	ps->val++;

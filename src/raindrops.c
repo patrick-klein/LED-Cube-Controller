@@ -13,13 +13,13 @@ void raindrops(rainStruct* rs)
 	int zLim = (rs->memory) ? 6 : 7;
 
 	/* shift array down (negative z direction) */
-    for (z=0; z<zLim; z++) {
-		for (y=0; y<8; y++) {
-	        for (x=0; x<8; x++) {
-				frameArray[x][y][z] = frameArray[x][y][z+1];
-			}
-   	    }
+  for (z=0; z<zLim; z++) {
+    for (y=0; y<8; y++) {
+      for (x=0; x<8; x++) {
+        frameArray[x][y][z] = frameArray[x][y][z+1];
+      }
     }
+  }
 
 	/* set new top layer */
 	for (y=0; y<8; y++) {

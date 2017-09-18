@@ -42,17 +42,17 @@ void display_handler (int signum)
 
 	int x, y;
 
-   	/* shift in data across y dim */
-   	for (y=0;y<8;y++) {							/* cycle across y dim */
-       	pin_low (HEADER, Y_CLK_PIN);			/* ensure Y_CLK is driven low */
-       	for (x=0;x<8;x++) {						/* cycle through x dim */
-       		if (frameArray[x][y][z]) {			/* load 1's complement onto pins */
-       			pin_low (HEADER, getPin(x));
-       		} else {
-       			pin_high (HEADER, getPin(x));
-       		}
-		}
-       	pin_high (HEADER, Y_CLK_PIN);			/* transition clock to move data into place */
+  /* shift in data across y dim */
+  for (y=0;y<8;y++) {							/* cycle across y dim */
+    pin_low (HEADER, Y_CLK_PIN);			/* ensure Y_CLK is driven low */
+    for (x=0;x<8;x++) {						/* cycle through x dim */
+      if (frameArray[x][y][z]) {			/* load 1's complement onto pins */
+        pin_low (HEADER, getPin(x));
+      } else {
+        pin_high (HEADER, getPin(x));
+      }
+    }
+    pin_high (HEADER, Y_CLK_PIN);			/* transition clock to move data into place */
 	}
 }
 
@@ -60,19 +60,19 @@ void display_handler (int signum)
 /******************************************************************************
  * getPin support function
  *		converts integer into corresponding pin number
- *		may want to consider just using an array instead
+ *		--stop being lazy and just make this an array
  ******************************************************************************/
 int getPin (const int pin)
 {
  		switch (pin){
- 			case 0: return X_DATA_PIN_0;
- 			case 1: return X_DATA_PIN_1;
- 			case 2: return X_DATA_PIN_2;
- 			case 3: return X_DATA_PIN_3;
- 			case 4: return X_DATA_PIN_4;
- 			case 5: return X_DATA_PIN_5;
- 			case 6: return X_DATA_PIN_6;
- 			case 7: return X_DATA_PIN_7;
+      case 0: return X_DATA_PIN_0;
+      case 1: return X_DATA_PIN_1;
+      case 2: return X_DATA_PIN_2;
+      case 3: return X_DATA_PIN_3;
+      case 4: return X_DATA_PIN_4;
+      case 5: return X_DATA_PIN_5;
+      case 6: return X_DATA_PIN_6;
+      case 7: return X_DATA_PIN_7;
  		}
  		/* should never be reached -- error code */
  		return -1;
@@ -126,10 +126,10 @@ void main (int argc, char** argv)
 	float fps = FPS;
 
 	/* declare variables */
-	z = 7;						/* z is set to account for immediate incrementation */
+	z = 7;                     /* z is set to account for immediate incrementation */
 
-    /* initialize frameArray */
-    memset (frameArray, OFF, 512*sizeof(bool));
+  /* initialize frameArray */
+  memset (frameArray, OFF, 512*sizeof(bool));
 
 	/* initialize library */
 	iolib_init();
@@ -176,25 +176,25 @@ void main (int argc, char** argv)
 	rs.memory = FALSE;
 
     /* create struct for edgeLight */
-    edgeStruct es;
+  edgeStruct es;
 	es.fps = 8;
 	es.stat = FALSE;		/* incompatible with cycleMode? */
 	es.mode = 2;
 	es.init = TRUE;
-    es.cycleMode = TRUE;     /* following two variables only needed if cycleMode */
-    es.numCount = 1;
-    es.randMode = FALSE;
+  es.cycleMode = TRUE;     /* following two variables only needed if cycleMode */
+  es.numCount = 1;
+  es.randMode = FALSE;
 
-    /* create struct for movingPlanes */
-    planeStruct ps;
+  /* create struct for movingPlanes */
+  planeStruct ps;
 	ps.fps = 1;
-    ps.init = TRUE;
+  ps.init = TRUE;
 	ps.rand = TRUE;
 
-    /* create struct for randomToggle */
-    randomStruct rnds;
+  /* create struct for randomToggle */
+  randomStruct rnds;
 	rnds.fps = 16;
-    rnds.clear = FALSE;
+  rnds.clear = FALSE;
 
 	/* initialize frame clock */
 	clock_t refTime = clock();
@@ -207,8 +207,8 @@ void main (int argc, char** argv)
 	/* clear clean flag */
 	bool clean = FALSE;
 
-    /* main display loop */
-    while (TRUE) {
+  /* main display loop */
+  while (TRUE) {
 		if ( ((float)(clock()-refTime)/CLOCKS_PER_SEC) > framePeriod ) {
 
 			refTime = clock();
@@ -243,19 +243,19 @@ void main (int argc, char** argv)
 						randomToggle (&rnds);
 						break;
 					case 2:
-            	        framePeriod = 1/rs.fps;
+            framePeriod = 1/rs.fps;
 						raindrops (&rs);
 						break;
 					case 3:
-                    	framePeriod = 1/es.fps;
+            framePeriod = 1/es.fps;
 						edgeLight (&es);
 						break;
 					case 4:
-                	    framePeriod = 1/ls.hist_fps;
+            framePeriod = 1/ls.hist_fps;
 						generateLifeHistory (&ls);
 						break;
 					case 5:
-                	    framePeriod = 1/ls.td_fps;
+            framePeriod = 1/ls.td_fps;
 						generateLife3D (&ls);
 						break;
 					case 6:
@@ -265,13 +265,12 @@ void main (int argc, char** argv)
 				}
 			}
 		}
-    }
+  }
 
-    /* free io pins */
-    iolib_free ();
+  /* free io pins */
+  iolib_free ();
 
-    /* free memory */
-    free (frameArray);
+  /* free memory */
+  free (frameArray);
 
 }
-

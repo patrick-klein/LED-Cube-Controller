@@ -21,12 +21,12 @@
 
 typedef struct {        /* container for generateLife parameters */
 	/* public */
-    int threeDLattice;
-    int historyLattice;
+  int threeDLattice;
+  int historyLattice;
 	float td_fps;
 	float hist_fps;
-    int rule;
-    bool init;
+  int rule;
+  bool init;
 	/* private */
 	bool oldFrameOne[8][8][8];
 	bool oldFrameTwo[8][8][8];

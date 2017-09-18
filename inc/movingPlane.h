@@ -8,7 +8,7 @@ typedef struct {    /* container for movingPlane parameters */
 	bool rand;
 	/* private */
 	bool newDir;
-    int dir;
+  int dir;
 	int val;
 	bool done;
 	bool clear;

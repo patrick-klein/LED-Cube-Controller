@@ -14,10 +14,18 @@ void animateBullet (bulletStruct* bs)
 		bs->pointZ = rand()%8;
 		bs->dir = rand()%6;
 		int x,y,z;
-		for(z=0;z<8;z++){for(y=0;y<8;y++){for(x=0;x<4;x++){frameArray[x][y][z]=bs->erase;}}}
+		for(z=0;z<8;z++){
+      for(y=0;y<8;y++){
+        for(x=0;x<4;x++){
+          frameArray[x][y][z]=bs->erase;
+        }
+      }
+    }
 		bs->init = FALSE;
 	} else {									/* 1/8 chance of randomly changing direction */
-		if (!(rand()%3)) { bs->dir = rand()%6; }
+		if (!(rand()%3)) {
+      bs->dir = rand()%6;
+    }
 	}
 
 	/* randomly change direction if at boundary, repeat until valid dir is found */
