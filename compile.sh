@@ -2,14 +2,13 @@ rm ./obj/*
 rm ./bin/*
 
 
-gcc -c -I inc -o ./obj/main.o ./src/main.c
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/main.o ./src/main.cpp
 
-gcc -c -I inc -o ./obj/animateBullet.o ./src/animateBullet.c
-gcc -c -I inc -o ./obj/edgeLight.o ./src/edgeLight.c
-gcc -c -I inc -o ./obj/generateLife.o ./src/generateLife.c
-gcc -c -I inc -o ./obj/raindrops.o ./src/raindrops.c
-gcc -c -I inc -o ./obj/movingPlane.o ./src/movingPlane.c
-gcc -c -I inc -o ./obj/randomToggle.o ./src/randomToggle.c
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/AnimateBullet.o ./src/AnimateBullet.cpp
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/EdgeLight.o ./src/EdgeLight.cpp
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/Raindrops.o ./src/Raindrops.cpp
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/MovingPlane.o ./src/MovingPlane.cpp
+clang++ -std=c++11 -stdlib=libc++ -c -I inc -o ./obj/RandomToggle.o ./src/RandomToggle.cpp
 
 
-gcc ./obj/main.o ./obj/animateBullet.o ./obj/edgeLight.o ./obj/generateLife.o ./obj/raindrops.o ./obj/movingPlane.o ./obj/randomToggle.o -Llib -I inc -liofunc -o ./bin/ledCube
+clang++ -std=c++11 -stdlib=libc++ ./obj/main.o ./obj/AnimateBullet.o ./obj/EdgeLight.o ./obj/Raindrops.o ./obj/MovingPlane.o ./obj/RandomToggle.o -Llib -I inc -liofunc -o ./bin/ledCube

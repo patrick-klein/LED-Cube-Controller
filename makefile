@@ -1,50 +1,42 @@
-OBJECTS = obj/main.o \
-        obj/animateBullet.o \
-        obj/edgeLight.o \
-        obj/generateLife.o \
-        obj/raindrops.o \
-        obj/movingPlane.o \
-        obj/randomToggle.o
+BDIR=bin
+IDIR=inc
+LDIR=lib
+ODIR=obj
+SDIR=src
 
-install : lib/libiofunc.a bin/ledCube
+_INC = common.h Animation.h AnimateBullet.h EdgeLight.h Raindrops.h MovingPlane.h RandomToggle.h
+INC = $(patsubst %,$(IDIR)/%,$(_INC))
 
-all : bin/ledCube
+_OBJ = main.o AnimateBullet.o EdgeLight.o Raindrops.o MovingPlane.o RandomToggle.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+CC=clang++
+CFLAGS= -std=c++11 -stdlib=libc++
+IFLAGS=-I$(IDIR)
+LFLAGS=-L$(LDIR) -liofunc
+
+.DEFAULT_GOAL := all
+
+install : clean $(LDIR)/libiofunc.a $(BDIR)/ledCube
+
+all : $(BDIR)/ledCube
 
 clean:
-  -rm -f obj/*
-  -rm -f bin/*
+	rm -f $(ODIR)/*
+	rm -f $(BDIR)/*
 
-bin/ledCube : $(OBJECTS)
-  gcc  $(OBJECTS) -Llib -I inc -liofunc -o bin/ledCube
+$(BDIR)/ledCube : $(OBJ)
+	$(CC) $(OBJECTS) $(LFLAGS) $(IFLAGS) -o bin/ledCube
 
-obj/main.o : src/main.c inc/common.h inc/edgeLight.h inc/generateLife.h inc/raindrops.h inc/movingPlane.h inc/randomToggle.h
-  gcc -c -I inc -o obj/main.o src/main.c
+$(ODIR)/main.o : $(SDIR)/main.cpp $(INC)
+	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
 
-obj/animateBullet.o : src/animateBullet.c inc/common.h inc/animateBullet.h
-  gcc -c -I inc -o obj/animateBullet.o src/animateBullet.c
+$(ODIR)/%.o : $(SDIR)/%.cpp $(IDIR)/common.h $(IDIR)/%.h
+	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
 
-obj/edgeLight.o : src/edgeLight.c inc/common.h inc/edgeLight.h
-  gcc -c -I inc -o obj/edgeLight.o src/edgeLight.c
-
-obj/generateLife.o : src/generateLife.c inc/common.h inc/generateLife.h
-  gcc -c -I inc -o obj/generateLife.o src/generateLife.c
-
-obj/raindrops.o : src/raindrops.c inc/common.h inc/raindrops.h
-  gcc -c -I inc -o obj/raindrops.o src/raindrops.c
-
-obj/movingPlane.o : src/movingPlane.c inc/common.h inc/movingPlane.h
-  gcc -c -I inc -o obj/movingPlane.o src/movingPlane.c
-
-obj/randomToggle.o : src/randomToggle.c inc/common.h inc/randomToggle.h
-  gcc -c -I inc -o obj/randomToggle.o src/randomToggle.c
-
-lib/libiofunc.a:
-  -rm -f lib/libiofunc.a
-  cd iofunc
-  $(MAKE) lib
-  cd ..
-  mv iofunc/libiofunc.a lib
-
-
-
-.PHONY: all lib clean
+$(LDIR)/libiofunc.a:
+	rm -f $(LDIR)/libiofunc.a
+	cd iofunc
+	$(MAKE) lib
+	cd ..
+	mv iofunc/libiofunc.a $(LDIR)

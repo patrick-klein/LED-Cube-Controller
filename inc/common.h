@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include <vector>
 
 #include <iolib.h>
 
@@ -57,20 +58,14 @@
 //	19
 //
 
-#define TRUE  1
-#define FALSE 0
-
 #define ON  1
 #define OFF 0
-
-typedef char bool;
 
 /******************************************************************************
 * global variables
 ******************************************************************************/
 
-extern int z;
-extern bool frameArray[8][8][8];
+
 
 /******************************************************************************
 * function declarations

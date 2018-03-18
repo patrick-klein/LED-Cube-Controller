@@ -5,6 +5,7 @@
 #include "common.h"
 #include "generateLife.h"
 
+
 void lifeInitialize (lifeStruct* ls, int lifeType)
 {
   int x, y, z, randVal;
@@ -29,6 +30,7 @@ void lifeInitialize (lifeStruct* ls, int lifeType)
   }
   ls->init = FALSE;
 }
+
 
 void generateLife3D (lifeStruct* ls)
 {
@@ -328,7 +330,7 @@ void generateLifeHistory(lifeStruct* ls)
         if (n==b[0] || n==b[1]) { tempZArray[x][y] = 1; }
         else { tempZArray[x][y] = 0; }
         break;
-      case 1:                   // Stays alive
+      case 1:                   // Survives
         if (n==s[0] || n==s[1]) { tempZArray[x][y] = 1; }
         else { tempZArray[x][y] = 0; }
       default:

@@ -1,11 +1,16 @@
 #ifndef RANDOMTOGGLE_H
 #define RANDOMTOGGLE_H
 
-typedef struct {        /* container for animateBullet parameters */
-  float fps;
-  bool clear;
-} randomStruct;
+#include "Animation.h"
 
-void randomToggle (randomStruct* rnds);
+class RandomToggle : public Animation
+{
+public:
+  float fps;
+  bool clear_frame;
+  RandomToggle (float f_fps=16);
+  void init ();
+  void nextFrame (bool frameArray[8][8][8]);
+};
 
 #endif

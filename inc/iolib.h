@@ -50,4 +50,3 @@ inline char is_high(char port, char pin);
 inline char is_low(char port, char pin);
 
 #endif // _IOLIB_H_
-

@@ -1,20 +1,24 @@
 #ifndef ANIMATEBULLET_H
 #define ANIMATEBULLET_H
 
-typedef struct {        /* container for animateBullet parameters */
-  /* public */
-  float fps;       /* need to test which combinations are valid */
+#include "Animation.h"
+
+class AnimateBullet : public Animation
+{
+public:
+  float fps;
   bool trail;
   bool erase;
-  bool init;
   bool toggle;
-  /* private */
+  AnimateBullet (float f_fps=16, bool b_trail=true, bool b_erase=false, bool b_toggle=true);
+  void init ();
+  void nextFrame (bool frameArray[8][8][8]);
+private:
   int pointX;
   int pointY;
   int pointZ;
   int dir;
-} bulletStruct;
-
-void animateBullet (bulletStruct* bs);
+  bool clear_frame;
+};
 
 #endif

@@ -1,19 +1,22 @@
 #ifndef MOVINGPLANE_H
 #define MOVINGPLANE_H
 
-typedef struct {    /* container for movingPlane parameters */
-  /* public */
-  bool init;
+#include "Animation.h"
+
+class MovingPlane : public Animation
+{
+public:
   float fps;
-  bool rand;
-  /* private */
+  bool rand_dir;
+  MovingPlane (float f_fps=1, bool b_rand=true);
+  void init ();
+  void nextFrame (bool frameArray[8][8][8]);
+private:
   bool newDir;
   int dir;
   int val;
   bool done;
   bool clear;
-} planeStruct;
-
-void movingPlane (planeStruct* es);
+};
 
 #endif

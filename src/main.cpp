@@ -1,42 +1,39 @@
-// CONSIDERATIONS
-//
-// set timer to ITIMER_REAL rather than ITIMER_VIRTUAL
-// rewrite in c++ to learn more about classes/objects/methods
+// TODO
 // find reasonable timer periods
-// pipeline new frame generation with frame displaying (with "vsync")
+// sync new frame generation with frame displaying
 // high frequency toggling to change brightness
-
+// properly assign variables (const, static, volatile, etc.)
 
 #include "common.h"
-#include "animateBullet.h"
-#include "edgeLight.h"
-#include "generateLife.h"
-#include "raindrops.h"
-#include "movingPlane.h"
-#include "randomToggle.h"
+#include "Animation.h"
+#include "AnimateBullet.h"
+#include "EdgeLight.h"
+#include "Raindrops.h"
+#include "MovingPlane.h"
+#include "RandomToggle.h"
 
 /******************************************************************************
 * global variables
 ******************************************************************************/
 
-int z;
-bool frameArray[8][8][8];
+int Z;
+bool FRAME_ARRAY[8][8][8];
 
 /******************************************************************************
 * display layer handler
-*    increment z
-*     displays layer
+*   --shift layer into array
+*   --increment Z
 ******************************************************************************/
 void display_handler (int signum)
 {
 
   pin_low (HEADER, Z_CLK_PIN);        /* drive clock low */
-  if (z<7) {
+  if (Z<7) {
     pin_low (HEADER, Z_DATA_PIN);     /* shift 0 into register */
-    z++;                              /* increment z */
+    Z++;                              /* increment Z */
   } else {
     pin_high (HEADER, Z_DATA_PIN);    /* shift 1 into register */
-    z = 0;                            /* reset z to 0 */
+    Z = 0;                            /* reset Z to 0 */
   }
   pin_high (HEADER, Z_CLK_PIN);       /* transition clock */
 
@@ -46,7 +43,7 @@ void display_handler (int signum)
   for (y=0; y<8; y++) {               /* cycle across y dim */
     pin_low (HEADER, Y_CLK_PIN);      /* ensure Y_CLK is driven low */
     for (x=0; x<8; x++) {             /* cycle through x dim */
-      if (frameArray[x][y][z]) {      /* load 1's complement onto pins */
+      if (FRAME_ARRAY[x][y][Z]) {      /* load 1's complement onto pins */
         pin_low (HEADER, getPin(x));
       } else {
         pin_high (HEADER, getPin(x));
@@ -59,8 +56,8 @@ void display_handler (int signum)
 
 /******************************************************************************
 * getPin support function
-*    converts integer into corresponding pin number
-*    --stop being lazy and just make this an array
+*    --converts integer into corresponding pin number
+*    --TODO: just make this an array
 ******************************************************************************/
 int getPin (const int pin)
 {
@@ -81,7 +78,8 @@ int getPin (const int pin)
 
 /******************************************************************************
 * timerSetup
-*   (not all my code--need to find source and give credit)
+*   TODO?: set timer to ITIMER_REAL rather than ITIMER_VIRTUAL
+*   TODO: find original source and give credit
 ******************************************************************************/
 
 void timerSetup (void (*fcn_pntr)(int), const int period)
@@ -107,8 +105,13 @@ void timerSetup (void (*fcn_pntr)(int), const int period)
 
 /******************************************************************************
 * main
+*   --generates frames according to various animations
+*   --sends frame to shift register array
+*   --shifts layers to create persistent image
+*   --sets animation mode if called with argument,
+*     otherwise runs demo looping through different modes
 ******************************************************************************/
-void main (int argc, char** argv)
+int main (int argc, char** argv)
 {
 
   /* get mode from input */
@@ -116,20 +119,17 @@ void main (int argc, char** argv)
   bool demo;
   if (argc>1) {
     mode = atoi(argv[1]);
-    demo = FALSE;
+    demo = false;
   } else {
     mode = 0;
-    demo = TRUE;
+    demo = true;
   }
 
-  /* probably not necessary */
-  float fps = FPS;
+  /* Z is set to account for immediate incrementation */
+  Z = 7;
 
-  /* declare variables */
-  z = 7;                     /* z is set to account for immediate incrementation */
-
-  /* initialize frameArray */
-  memset (frameArray, OFF, 512*sizeof(bool));
+  /* initialize FRAME_ARRAY */
+  memset (FRAME_ARRAY, OFF, 512*sizeof(bool));
 
   /* initialize library */
   iolib_init();
@@ -152,125 +152,58 @@ void main (int argc, char** argv)
   /* set random seed */
   srand(time(NULL));
 
-  /* create struct for animateBullet */
-  bulletStruct bs;
-  bs.fps = 16;
-  bs.trail = TRUE;
-  bs.erase = FALSE;
-  bs.toggle = TRUE;
-  bs.init = TRUE;
+  /* intialize animation states */
+  AnimateBullet bs;
+  Raindrops rs;
+  EdgeLight es;
+  MovingPlane ps;
+  RandomToggle rnds;
 
-  /* create struct for generateLife */
-  lifeStruct ls;
-  ls.td_fps = 6;
-  ls.hist_fps = 12;
-  ls.init = TRUE;
-  ls.rule = RULE_1;                     /* 0, 1 */
-  ls.threeDLattice = CUBE_LATTICE;      /* cube, cardinal, planar */
-  ls.historyLattice = SQUARE_LATTICE;   /* cardinal, corner, square */
-
-  /* create struct for raindrops */
-  rainStruct rs;
-  rs.fps = 12;
-  rs.chance = (int) (100/64*4);
-  rs.memory = FALSE;
-
-  /* create struct for edgeLight */
-  edgeStruct es;
-  es.fps = 8;
-  es.stat = FALSE;       /* incompatible with cycleMode? */
-  es.mode = 2;
-  es.init = TRUE;
-  es.cycleMode = TRUE;   /* following two variables only needed if cycleMode */
-  es.numCount = 1;
-  es.randMode = FALSE;
-
-  /* create struct for movingPlanes */
-  planeStruct ps;
-  ps.fps = 1;
-  ps.init = TRUE;
-  ps.rand = TRUE;
-
-  /* create struct for randomToggle */
-  randomStruct rnds;
-  rnds.fps = 16;
-  rnds.clear = FALSE;
+  /* initialize vector of animation modes */
+  std::vector<Animation*> anim_modes = {&bs, &rs, &es, &ps, &rnds};
+  int num_modes = anim_modes.size();
+  Animation* anim = anim_modes[mode];
+  anim->init();
+  float framePeriod = 1/anim->fps;
 
   /* initialize frame clock */
   clock_t refTime = clock();
-  float framePeriod = 1/FPS;
 
   /* set demo clock */
   clock_t demoTime = clock();
-  float demoPeriod = 60;       /* seconds */
-
-  /* clear clean flag */
-  bool clean = FALSE;
+  float demoPeriod = 60;        /* seconds */
 
   /* main display loop */
-  while (TRUE) {
-    if ( ((float)(clock()-refTime)/CLOCKS_PER_SEC) > framePeriod ) {
+  while (true) {
 
+    /* compare clock to framePeriod */
+    if ( ((float)(clock()-refTime)/CLOCKS_PER_SEC) > framePeriod ) {
       refTime = clock();
 
       /* if demo mode is on, check if demo timer is up */
       if (demo) {
         if ( ((float)(refTime-demoTime)/CLOCKS_PER_SEC) > demoPeriod ) {
-          if (mode==2||mode==3||mode==4||mode==5) {
-            //clean = TRUE;
-            //ps.init = TRUE;
-            //framePeriod = 1/ps.fps;
-          }
-          mode = (mode+1)%4;
-          ls.init = bs.init = es.init = ps.init = TRUE;
+          /* increment mode and initialize new animation */
+          mode = (mode + 1) % num_modes;
+          anim = anim_modes[mode];
+          anim->init();
+          framePeriod = 1/anim->fps;
           demoTime = clock();
         }
       }
 
-      /* 'wipe' frame clean before new animation */
-      if (clean) {
-        movingPlane (&ps);
-        if (ps.done) { clean=FALSE; }
-      } else {
-        /* generate new frame -- choose one based on mode (if input) */
-        switch (mode) {
-        case 0:
-          framePeriod = 1/bs.fps;
-          animateBullet (&bs);
-          break;
-        case 1:
-          framePeriod = 1/rnds.fps;
-          randomToggle (&rnds);
-          break;
-        case 2:
-          framePeriod = 1/rs.fps;
-          raindrops (&rs);
-          break;
-        case 3:
-          framePeriod = 1/es.fps;
-          edgeLight (&es);
-          break;
-        case 4:
-          framePeriod = 1/ls.hist_fps;
-          generateLifeHistory (&ls);
-          break;
-        case 5:
-          framePeriod = 1/ls.td_fps;
-          generateLife3D (&ls);
-          break;
-        case 6:
-          framePeriod = 1/ps.fps;
-          movingPlane(&ps);
-          break;
-        }
-      }
+      /* get next frame */
+      anim->nextFrame(FRAME_ARRAY);
+
     }
   }
 
   /* free io pins */
-  iolib_free ();
+  iolib_free();
 
   /* free memory */
-  free (frameArray);
+  free(FRAME_ARRAY);
+
+  return 0;
 
 }
