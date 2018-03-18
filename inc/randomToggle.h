@@ -2,8 +2,8 @@
 #define RANDOMTOGGLE_H
 
 typedef struct {        /* container for animateBullet parameters */
-	float fps;
-	bool clear;
+  float fps;
+  bool clear;
 } randomStruct;
 
 void randomToggle (randomStruct* rnds);

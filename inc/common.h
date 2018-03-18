@@ -11,11 +11,11 @@
 #include <iolib.h>
 
 /******************************************************************************
- * macro definitions
- ******************************************************************************/
+* macro definitions
+******************************************************************************/
 
-#define REFRESH_RATE	288.0
-#define FPS				12.0
+#define REFRESH_RATE 288.0
+#define FPS 12.0
 
 #define POS_X 0
 #define NEG_X 1
@@ -57,24 +57,24 @@
 //	19
 //
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE  1
+#define FALSE 0
 
-#define ON	1
-#define OFF	0
+#define ON  1
+#define OFF 0
 
 typedef char bool;
 
 /******************************************************************************
- * global variables
- ******************************************************************************/
+* global variables
+******************************************************************************/
 
 extern int z;
 extern bool frameArray[8][8][8];
 
 /******************************************************************************
- * function declarations
- ******************************************************************************/
+* function declarations
+******************************************************************************/
 
 void display_handler (int signum);
 void timerSetup (void (*fcn_pntr)(int), int period);
