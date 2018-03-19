@@ -1,3 +1,6 @@
+#!/bin/sh
+# Testing only.  Use makefile to build project.
+
 rm -f ./obj/*
 rm -f ./bin/*
 
