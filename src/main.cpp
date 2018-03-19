@@ -78,7 +78,6 @@ int getPin (const int pin)
 
 /******************************************************************************
 * timerSetup
-*   TODO?: set timer to ITIMER_REAL rather than ITIMER_VIRTUAL
 *   TODO: find original source and give credit
 ******************************************************************************/
 
@@ -181,15 +180,13 @@ int main (int argc, char** argv)
       refTime = clock();
 
       /* if demo mode is on, check if demo timer is up */
-      if (demo) {
-        if ( ((float)(refTime-demoTime)/CLOCKS_PER_SEC) > demoPeriod ) {
-          /* increment mode and initialize new animation */
-          mode = (mode + 1) % num_modes;
-          anim = anim_modes[mode];
-          anim->init();
-          framePeriod = 1/anim->fps;
-          demoTime = clock();
-        }
+      if (demo && ((float)(refTime-demoTime)/CLOCKS_PER_SEC) > demoPeriod ) {
+        /* increment mode and initialize new animation */
+        mode = (mode + 1) % num_modes;
+        anim = anim_modes[mode];
+        anim->init();
+        framePeriod = 1/anim->fps;
+        demoTime = clock();
       }
 
       /* get next frame */
