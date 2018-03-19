@@ -26,7 +26,7 @@ clean:
 	rm -f $(BDIR)/*
 
 $(BDIR)/ledCube : $(OBJ)
-	$(CC) $(OBJECTS) $(LFLAGS) $(IFLAGS) -o bin/ledCube
+	$(CC) $(OBJ) $(LFLAGS) $(IFLAGS) -o $@
 
 $(ODIR)/main.o : $(SDIR)/main.cpp $(INC)
 	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
