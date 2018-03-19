@@ -31,7 +31,7 @@ $(BDIR)/ledCube : $(OBJ)
 $(ODIR)/main.o : $(SDIR)/main.cpp $(INC)
 	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
 
-$(ODIR)/%.o : $(SDIR)/%.cpp $(IDIR)/common.h $(IDIR)/%.h
+$(ODIR)/%.o : $(SDIR)/%.cpp $(IDIR)/common.h $(IDIR)/%.h $(IDIR)/Animation.h
 	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
 
 $(LDIR)/libiofunc.a:
