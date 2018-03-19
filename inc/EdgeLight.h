@@ -7,7 +7,7 @@ class EdgeLight : public Animation
 {
 public:
   float fps;
-  bool stat;      /* static frames */
+  bool stat;        /* static frames */
   int mode;
   bool cycleMode;   /* following two variables only needed if cycleMode */
   int numCount;
@@ -22,3 +22,9 @@ private:
 };
 
 #endif
+
+//mode = 0;	/* corner cubes */
+//mode = 1;	/* pulsing edges */
+//mode = 2;	/* pulsing cube */
+//mode = 3;	/* nested cubes */
+//mode = 4;	/* outwards pulsing hypercube */

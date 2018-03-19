@@ -28,12 +28,6 @@ void EdgeLight::nextFrame (bool frameArray[8][8][8])
   bool xEdge, yEdge, zEdge;
   int i, iLoop;
 
-  //mode = 0;	/* corner cubes */
-  //mode = 1;	/* pulsing edges */
-  //mode = 2;	/* pulsing cube */
-  //es->mode = 3;	/* nested cubes */
-  //es->mode = 4;	/* outwards pulsing hypercube */
-
   i = iVal;
 
   for (xInd=0; xInd<4; xInd++) {
