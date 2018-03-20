@@ -176,11 +176,11 @@ int main (int argc, char** argv)
   while (true) {
 
     /* compare clock to framePeriod */
-    if ( ((float)(clock()-refTime)/CLOCKS_PER_SEC) > framePeriod ) {
+    if (clock()-refTime > framePeriod*CLOCKS_PER_SEC) {
       refTime = clock();
 
       /* if demo mode is on, check if demo timer is up */
-      if (demo && ((float)(refTime-demoTime)/CLOCKS_PER_SEC) > demoPeriod ) {
+      if (demo && refTime-demoTime > demoPeriod*CLOCKS_PER_SEC) {
         /* increment mode and initialize new animation */
         mode = (mode + 1) % num_modes;
         anim = anim_modes[mode];
