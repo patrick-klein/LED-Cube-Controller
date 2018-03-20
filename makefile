@@ -17,16 +17,12 @@ LFLAGS=-L$(LDIR) -liofunc
 
 .DEFAULT_GOAL := all
 
-install : clean $(LDIR)/libiofunc.a $(BDIR)/ledCube
-
 all : $(BDIR)/ledCube
-
-clean:
-	rm -f $(ODIR)/*
-	rm -f $(BDIR)/*
 
 $(BDIR)/ledCube : $(OBJ)
 	$(CC) $(OBJ) $(LFLAGS) $(IFLAGS) -o $@
+
+build : $(OBJ)
 
 $(ODIR)/main.o : $(SDIR)/main.cpp $(INC)
 	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
@@ -34,9 +30,15 @@ $(ODIR)/main.o : $(SDIR)/main.cpp $(INC)
 $(ODIR)/%.o : $(SDIR)/%.cpp $(IDIR)/common.h $(IDIR)/%.h $(IDIR)/Animation.h
 	$(CC) $(CFLAGS) -c $(IFLAGS) -o $@ $<
 
+install : clean $(LDIR)/libiofunc.a $(BDIR)/ledCube
+
 $(LDIR)/libiofunc.a:
 	rm -f $(LDIR)/libiofunc.a
 	cd iofunc
 	$(MAKE) lib
 	cd ..
 	mv iofunc/libiofunc.a $(LDIR)
+
+clean:
+	rm -f $(ODIR)/*
+	rm -f $(BDIR)/*
