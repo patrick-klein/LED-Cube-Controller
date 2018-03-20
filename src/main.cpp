@@ -151,15 +151,15 @@ int main (int argc, char** argv)
   /* set random seed */
   srand(time(NULL));
 
-  /* intialize animation states */
-  AnimateBullet bs;
-  Raindrops rs;
-  EdgeLight es;
-  MovingPlane ps;
-  RandomToggle rnds;
+  /* intialize animation state pointers */
+  AnimateBullet* bs;
+  Raindrops* rs;
+  EdgeLight* es;
+  MovingPlane* ps;
+  RandomToggle* rnds;
 
-  /* initialize vector of animation modes */
-  std::vector<Animation*> anim_modes = {&bs, &rs, &es, &ps, &rnds};
+  /* initialize vector of animation pointers */
+  std::vector<Animation*> anim_modes = {bs, rs, es, ps, rnds};
   int num_modes = anim_modes.size();
   Animation* anim = anim_modes[mode];
   anim->init();
